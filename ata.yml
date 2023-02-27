@@ -4,6 +4,10 @@
     hosts: localhost
     connection: local
     tasks:
+# Ansible Playbook will run on the Localhost where AWX is installed
+    hosts: urmint21A
+    connection: ssh
+    tasks:
 # Below task will execute the list of directories and files present
     - name: "just execute a ls -lrt command"
       shell: "pwd;ls -lrt"
