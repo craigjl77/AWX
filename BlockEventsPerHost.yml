@@ -21,7 +21,7 @@
       when: not lookup_file.stat.exists 
 
     - name: "Search for hostname"
-      # 'failed_when: presence is changed' indicates host missing
+      # check.changed will be true if hostname exists
       #become: yes
       #become_user: root
       #tags: example1
@@ -30,13 +30,12 @@
         regexp: ".*{{JShostname}}.*"
         replace: "TestReplace"
       check_mode: yes
-      #changed_when: false
       register: check
       
-    - debug: var=check
+    #- debug: var=check
     
     - name: Add new host to dpautomate.drop.lookup
-      # 
+      # Will be skipped if check.changed is true
       lineinfile:
         path: "{{rules_file_dpautolookup}}"
         backup: no
@@ -45,8 +44,7 @@
       when: check.changed == false 
        
     - name: Restart Probe
-      #shell: "{{omnibin}}/nco_pa_status -password {{netcooluserpw}}"
-      #register: "output"
+      # Will be skipped if check.changed is true
       shell: |
         {{omnibin}}/nco_pa_stop -process Mttrapd -password {{netcooluserpw}}
         sleep 1
@@ -54,6 +52,7 @@
       when: check.changed == false
       
     - name: "Hostname is already present"
+      # Will run if check.changed is true
       debug: msg="Hostname {{JShostname}} is alredy present"
       when: check.changed == true
       
