@@ -13,8 +13,8 @@
       lineinfile:
        path: "{{rules_file_path}}"
        backup: no
-       regexp: '^\{$'
-       insertafter: '^\{$'
+       #regexp: '^\{$'
+       insertafter: '.*\{"DummyHost1","1"\}'
        line: '        {"ZZTargetHostZZ","1"},'
       
 # The Output of the above task will be displayed on the Screen
