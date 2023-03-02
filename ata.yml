@@ -15,7 +15,7 @@
        backup: no
        #regexp: '^\{$'
        insertafter: '.*\{"DummyHost1","1"\}'
-       line: '        {"ZZTargetHostZZ","1"},'
+       line: '        {"{{myhost}}","1"},'
       
 # The Output of the above task will be displayed on the Screen
     #- debug: var=output.stdout_lines
