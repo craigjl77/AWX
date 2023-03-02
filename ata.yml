@@ -13,9 +13,9 @@
       lineinfile:
        path: "{{rules_file_path}}"
        backup: no
-       regexp: '.*\{\"DummyHost1\",\"1\"\}$'
-       insertafter: '.*\{\"DummyHost1\",\"1\"\}$'
-       line: '{"ZZTargetHostZZ","1"},'
+       regexp: '^\{$'
+       insertafter: '^\{$'
+       line: '        {"ZZTargetHostZZ","1"},'
       
 # The Output of the above task will be displayed on the Screen
     #- debug: var=output.stdout_lines
