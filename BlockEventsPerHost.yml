@@ -6,7 +6,7 @@
     
     - name: Does lookup file exist
       stat:
-        path {{rules_file_dpautolookup}}
+        path: {{rules_file_dpautolookup}}
       register: lookup_file
        
     - name: Create lookup file if not exists
