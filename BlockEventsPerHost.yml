@@ -20,12 +20,27 @@
         echo 'default = {"Unknown"}' >> {{ rules_file_dpautolookup }}
       when: not lookup_file.stat.exists 
 
-    - name: Add new host to dpautomate.drop.lookup
+    - name: "Search for hostname"
+      # 'failed_when: presence is changed' indicates host missing
+      #become: yes
+      #become_user: root
+      #tags: example1
       lineinfile:
-       path: "{{rules_file_dpautolookup}}"
-       backup: no
-       insertafter: '.*\{"DummyHost1","1"\}'
-       line: '        {"{{JShostname}}","1"},'
+        path: "{{rules_file_dpautolookup}}"
+        line: "{"{{JShostname}}","1"},"
+        state: present
+      check_mode: yes
+      register: presence
+      failed_when: presence is changed 
+
+    - name: Add new host to dpautomate.drop.lookup
+      # 
+      lineinfile:
+        path: "{{rules_file_dpautolookup}}"
+        backup: no
+        insertafter: '.*\{"DummyHost1","1"\}'
+        line: '        {"{{JShostname}}","1"},'
+      when: presence is changed 
        
     - name: Restart Probe
       #shell: "{{omnibin}}/nco_pa_status -password {{netcooluserpw}}"
@@ -34,6 +49,11 @@
         {{omnibin}}/nco_pa_stop -process Mttrapd -password {{netcooluserpw}}
         sleep 1
         {{omnibin}}/nco_pa_start -process Mttrapd -password {{netcooluserpw}}
-        
-      # The Output of the above task will be displayed on the Screen
-    - debug: var=output.stdout_lines
+      when: presence is changed
+      
+    - name: "Hostname is already present"
+      debug: msg="Hostname {{JShostname}} is alredy present"
+      when: presence is not changed
+      
+    # The Output of the above task will be displayed on the Screen
+    #- debug: var=output.stdout_lines
