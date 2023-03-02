@@ -31,7 +31,7 @@
         state: present
       check_mode: yes
       register: presence
-      failed_when: presence is changed 
+      failed_when: presence is not changed 
 
     - name: Add new host to dpautomate.drop.lookup
       # 
@@ -40,7 +40,7 @@
         backup: no
         insertafter: '.*\{"DummyHost1","1"\}'
         line: '        {"{{JShostname}}","1"},'
-      when: presence is changed 
+      when: presence is not changed 
        
     - name: Restart Probe
       #shell: "{{omnibin}}/nco_pa_status -password {{netcooluserpw}}"
@@ -49,11 +49,11 @@
         {{omnibin}}/nco_pa_stop -process Mttrapd -password {{netcooluserpw}}
         sleep 1
         {{omnibin}}/nco_pa_start -process Mttrapd -password {{netcooluserpw}}
-      when: presence is changed
+      when: presence is not changed
       
     - name: "Hostname is already present"
       debug: msg="Hostname {{JShostname}} is alredy present"
-      when: presence is not changed
+      when: presence is changed
       
     # The Output of the above task will be displayed on the Screen
     #- debug: var=output.stdout_lines
