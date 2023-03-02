@@ -12,3 +12,4 @@
        
     - name: Restart Probe
       shell: "{{omnibin}}/nco_pa_status -p {{netcooluserpw}}"
+      register: "output"
