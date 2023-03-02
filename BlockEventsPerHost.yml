@@ -33,7 +33,7 @@
       #changed_when: false
       register: check
       
-    - debug: var=check.stdout_lines
+    - debug: var=check
     
     - name: Add new host to dpautomate.drop.lookup
       # 
