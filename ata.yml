@@ -12,10 +12,10 @@
     - name: Insert New Line under the Regex configuration
       lineinfile:
        path: "{{rules_file_path}}"
-       backup: yes
+       backup: no
        regexp: '.*\{\"DummyHost1\",\"1\"\}$'
        insertafter: '.*\{\"DummyHost1\",\"1\"\}$'
-       line: '{\"ZZTargetHostZZ\",\"1\"\}'
+       line: '{"ZZTargetHostZZ","1"},'
       
 # The Output of the above task will be displayed on the Screen
     #- debug: var=output.stdout_lines
