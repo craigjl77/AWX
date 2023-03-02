@@ -1,0 +1,11 @@
+---
+  - name: "Block all Events Per Host"
+# Ansible Playbook will run on all hosts
+    hosts: all
+    tasks:
+    - name: Add new host to dpautomate.drop.lookup
+      lineinfile:
+       path: "{{rules_file_path}}"
+       backup: no
+       insertafter: '.*\{"DummyHost1","1"\}'
+       line: '        {"{{JShostname}}","1"},'
