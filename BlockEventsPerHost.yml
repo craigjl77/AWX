@@ -4,6 +4,21 @@
     hosts: all
     tasks:
     
+    - name: Does EIF rules file exist
+      stat:
+        path: "{{rules_file_eif}}"
+      register: eif_rules
+       
+    - name: Does SNMP rules file exist
+      stat:
+        path: "{{rules_file_snmp}}"
+      register: snmp_rules
+       
+    - name: Does Syslog rules file exist
+      stat:
+        path: "{{rules_file_syslog}}"
+      register: syslog_rules
+       
     - name: Does lookup file exist
       stat:
         path: "{{rules_file_dpautolookup}}"
