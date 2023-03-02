@@ -4,12 +4,12 @@
     hosts: all
     tasks:
     
-    - Does lookup file exist
+    - name: Does lookup file exist
       stat:
         path {{ rules_file_dpautolookup }}
       register: lookup_file
        
-    - Create lookup file if not exists
+    - name: Create lookup file if not exists
       shell: |
         echo '## Table of hostnames where all events are dropped if set to 1' > {{ rules_file_dpautolookup }}
         echo 'table dpautomate.drop = ' >> {{ rules_file_dpautolookup }}
