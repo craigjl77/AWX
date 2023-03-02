@@ -13,3 +13,6 @@
     - name: Restart Probe
       shell: "{{omnibin}}/nco_pa_status -p {{netcooluserpw}}"
       register: "output"
+      
+      # The Output of the above task will be displayed on the Screen
+    - debug: var=output.stdout_lines
