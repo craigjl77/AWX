@@ -5,8 +5,8 @@
     tasks:
     - Does lookup file exist
       stat:
-         path {{ rules_file_dpautolookup }}
-       register: lookup_file
+        path {{ rules_file_dpautolookup }}
+      register: lookup_file
        
     - Create lookup file if not exists
       shell: |
