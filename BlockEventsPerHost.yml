@@ -14,6 +14,30 @@
         path: "{{rules_file_snmp}}"
       register: snmp_rules
        
+    - name: "Search for check_snmp_lookup"
+      # check.changed will be true if hostname exists
+      #become: yes
+      #become_user: root
+      #tags: example1
+      replace:
+        path: "{{rules_file_snmp}}"
+        regexp: ".*dpautomate.drop.lookup.*"
+        replace: "TestReplace"
+      check_mode: yes
+      register: check_snmp_lookup
+      
+    #- debug: var=check_snmp_lookup
+
+      - name: Add lookup to snmprules
+      # Will be skipped if check.changed is true 
+      lineinfile:
+        path: "{{rules_file_dpautolookup}}"
+        backup: no
+        insertbefore: '.*Leaving... snmptrap.rules'
+        line: 'include "$NC_RULES_HOME/dpautomate.drop.lookup"'
+      when: check_snmp_lookup.changed == false 
+
+  
     - name: Does Syslog rules file exist
       stat:
         path: "{{rules_file_syslog}}"
@@ -45,31 +69,31 @@
         regexp: ".*{{JShostname}}.*"
         replace: "TestReplace"
       check_mode: yes
-      register: check
+      register: check_hostname
       
-    #- debug: var=check
+    #- debug: var=check_hostname
     
     - name: Add new host to dpautomate.drop.lookup
-      # Will be skipped if check.changed is true
+      # Will be skipped if check.changed is true 
       lineinfile:
         path: "{{rules_file_dpautolookup}}"
         backup: no
         insertafter: '.*\{"DummyHost1","1"\}'
         line: '        {"{{JShostname}}","1"},'
-      when: check.changed == false 
+      when: check_hostname.changed == false 
        
-    - name: Restart Probe
+    - name: Restart Mttrapd Probe
       # Will be skipped if check.changed is true
       shell: |
         {{omnibin}}/nco_pa_stop -process Mttrapd -password {{netcooluserpw}}
         sleep 1
         {{omnibin}}/nco_pa_start -process Mttrapd -password {{netcooluserpw}}
-      when: check.changed == false
+      when: (check_hostname.changed == false) and (snmp_rules.stat.exists)
       
     - name: "Hostname is already present"
       # Will run if check.changed is true
       debug: msg="Hostname {{JShostname}} is alredy present"
-      when: check.changed == true
+      when: check_hostname.changed == true
       
     # The Output of the above task will be displayed on the Screen
     #- debug: var=output.stdout_lines
