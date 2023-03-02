@@ -29,7 +29,7 @@
         path: "{{rules_file_dpautolookup}}"
         regex: ".*{{JShostname}}.*"
         replace: "TestReplace"
-      check_mode: yes
+      #check_mode: yes
       #changed_when: false
       register: check
       
