@@ -5,8 +5,18 @@
     #connection: local
     tasks:
 # Below task will execute the list of directories and files present
-    - name: "just execute a ls -lrt command"
-      shell: "cd /;ls -l"
-      register: "output"
+    #- name: "just execute a ls -lrt command"
+    #  shell: "cd /;ls -l"
+     # register: "output"
+
+    - name: Insert New Line under the Regex configuration
+      lineinfile:
+       path: "{{rules_file_path}}"
+       backup: yes
+       regexp: '.*\{\"DummyHost1\",\"1\"\}$'
+       insertafter: '.*\{\"DummyHost1\",\"1\"\}$'
+       line: '{\"ZZTargetHostZZ\",\"1\"\}'
+      
 # The Output of the above task will be displayed on the Screen
-    - debug: var=output.stdout_lines
+    #- debug: var=output.stdout_lines
+    
