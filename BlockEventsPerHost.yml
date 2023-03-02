@@ -29,8 +29,8 @@
         path: "{{rules_file_dpautolookup}}"
         regex: ".*{{JShostname}}.*"
         replace: "TestReplace"
-      check_mode: true
-      changed_when: false
+      check_mode: yes
+      #changed_when: false
       register: check
       
     - debug: var=check.stdout_lines
