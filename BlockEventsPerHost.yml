@@ -27,9 +27,9 @@
       #tags: example1
       replace:
         path: "{{rules_file_dpautolookup}}"
-        regex: ".*{{JShostname}}.*"
+        regexp: ".*{{JShostname}}.*"
         replace: "TestReplace"
-      #check_mode: yes
+      check_mode: yes
       #changed_when: false
       register: check
       
