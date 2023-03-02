@@ -27,7 +27,7 @@
       #tags: example1
       lineinfile:
         path: "{{rules_file_dpautolookup}}"
-        line: "{"{{JShostname}}","1"},"
+        line: '.*{{JShostname}}.*'
         state: present
       check_mode: yes
       register: presence
