@@ -3,6 +3,7 @@
 # Ansible Playbook will run on all hosts
     hosts: all
     tasks:
+    
     - Does lookup file exist
       stat:
         path {{ rules_file_dpautolookup }}
