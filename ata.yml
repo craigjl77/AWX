@@ -9,13 +9,12 @@
     #  shell: "cd /;ls -l"
      # register: "output"
 
-    - name: Insert New Line under the Regex configuration
+    - name: Add new host to dpautomate.drop.lookup
       lineinfile:
        path: "{{rules_file_path}}"
        backup: no
-       #regexp: '^\{$'
        insertafter: '.*\{"DummyHost1","1"\}'
-       line: '        {"{{myhost}}","1"},'
+       line: '        {"{{JShostname}}","1"},'
       
 # The Output of the above task will be displayed on the Screen
     #- debug: var=output.stdout_lines
