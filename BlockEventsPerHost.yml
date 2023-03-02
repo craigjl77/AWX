@@ -11,7 +11,7 @@
        line: '        {"{{JShostname}}","1"},'
        
     - name: PA Status
-      shell: "{{omnibin}}/nco_pa_status -p {{netcooluserpw}}"
+      shell: "{{omnibin}}/nco_pa_status -password {{netcooluserpw}}"
       register: "output"
       
       # The Output of the above task will be displayed on the Screen
