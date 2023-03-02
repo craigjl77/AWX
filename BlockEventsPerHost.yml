@@ -18,6 +18,5 @@
         sleep 1
         {{omnibin}}/nco_pa_start -process Mttrapd -password {{netcooluserpw}}
         
-        register: "output"
       # The Output of the above task will be displayed on the Screen
     - debug: var=output.stdout_lines
