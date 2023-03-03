@@ -1,6 +1,6 @@
 ---
   - name: "Block all Events Per Host"
-# Ansible Playbook will run on all hosts
+    # Ansible Playbook will run on all hosts
     hosts: all
     tasks:
     
