@@ -57,7 +57,7 @@
         path: "{{rules_file_snmp}}"
         backup: no
         insertafter: '.*dpautomate.drop.lookup.*'
-        line: {{ item }}
+        line: "{{ item }}"
       with_items:
       - 'if (lookup(@Node, dpautomate.drop.lookup)) {'
       - '        discard'
