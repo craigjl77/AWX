@@ -8,11 +8,15 @@
       stat:
         path: "{{rules_file_eif}}"
       register: eif_rules
-       
+      
+    - debug: var=eif_rules   
+    
     - name: Does SNMP rules file exist
       stat:
         path: "{{rules_file_snmp}}"
       register: snmp_rules
+      
+    - debug: var=snmp_rules  
        
     - name: "Search for check_snmp_lookup"
       # check.changed will be true if hostname exists
@@ -25,28 +29,35 @@
         replace: "TestReplace"
       check_mode: yes
       register: check_snmp_lookup
+      when: snmp_rules.stat.exists
       
-    #- debug: var=check_snmp_lookup
+    - debug: var=check_snmp_lookup
 
-      - name: Add lookup to snmprules
+    - name: Add lookup to snmprules
       # Will be skipped if check.changed is true 
       lineinfile:
         path: "{{rules_file_dpautolookup}}"
         backup: no
-        insertbefore: '.*Leaving... snmptrap.rules'
+        insertbefore: '.*Leaving... snmptrap.rules.*'
         line: 'include "$NC_RULES_HOME/dpautomate.drop.lookup"'
-      when: check_snmp_lookup.changed == false 
+      register: lookup_in_snmprules  
+      when: (check_snmp_lookup.changed == false) and (snmp_rules.stat.exists)
 
+    - debug: var=lookup_in_snmprules
   
     - name: Does Syslog rules file exist
       stat:
         path: "{{rules_file_syslog}}"
       register: syslog_rules
+      
+    - debug: var=syslog_rules
        
     - name: Does lookup file exist
       stat:
         path: "{{rules_file_dpautolookup}}"
       register: lookup_file
+
+    - debug: var=lookup_file  
        
     - name: Create lookup file if not exists
       shell: |
@@ -57,7 +68,7 @@
         echo '        {"DummyHost2","1",}' >> {{ rules_file_dpautolookup }}
         echo '}' >> {{ rules_file_dpautolookup }}
         echo 'default = {"Unknown"}' >> {{ rules_file_dpautolookup }}
-      when: not lookup_file.stat.exists 
+      when:  not lookup_file.stat.exists
 
     - name: "Search for hostname"
       # check.changed will be true if hostname exists
