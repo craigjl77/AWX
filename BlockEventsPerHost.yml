@@ -3,14 +3,20 @@
     # Ansible Playbook will run on all hosts
     hosts: all
     tasks:
-    
+
+    #####################################
+    #  EIF Section
+    #####################################    
     - name: Does EIF rules file exist
       stat:
         path: "{{rules_file_eif}}"
       register: eif_rules
       
-    - debug: var=eif_rules   
-    
+    - debug: var=eif_rules 
+
+    #####################################
+    #  SNMP Section
+    #####################################
     - name: Does SNMP rules file exist
       stat:
         path: "{{rules_file_snmp}}"
@@ -19,7 +25,7 @@
     - debug: var=snmp_rules  
        
     - name: "Search for check_snmp_lookup"
-      # check.changed will be true if hostname exists
+      # check_snmp_lookup.changed will be true if dpautomate.drop.lookup exists
       #become: yes
       #become_user: root
       #tags: example1
@@ -34,7 +40,7 @@
     - debug: var=check_snmp_lookup
 
     - name: Add lookup to snmprules
-      # Will be skipped if check.changed is true 
+      # Will be skipped if heck_snmp_lookup.changed is true 
       lineinfile:
         path: "{{rules_file_snmp}}"
         backup: no
@@ -44,14 +50,47 @@
       when: (check_snmp_lookup.changed == false) and (snmp_rules.stat.exists)
 
     - debug: var=lookup_in_snmprules
-  
+
+    #####################################
+    #  Syslog Section
+    #####################################
     - name: Does Syslog rules file exist
       stat:
         path: "{{rules_file_syslog}}"
       register: syslog_rules
       
     - debug: var=syslog_rules
-       
+
+    - name: "Search for check_syslog_lookup"
+      # check.changed will be true if dpautomate.drop.lookup exists
+      #become: yes
+      #become_user: root
+      #tags: example1
+      replace:
+        path: "{{rules_file_syslog}}"
+        regexp: ".*dpautomate.drop.lookup.*"
+        replace: "TestReplace"
+      check_mode: yes
+      register: check_syslog_lookup
+      when: syslog_rules.stat.exists
+      
+    - debug: var=check_snmp_lookup
+
+    - name: Add lookup to syslogrules
+      # Will be skipped if check_syslog_lookup.changed is true 
+      lineinfile:
+        path: "{{rules_file_snmp}}"
+        backup: no
+        insertbefore: '.*Leaving... syslog.rules.*'
+        line: 'include "$NC_RULES_HOME/dpautomate.drop.lookup"'
+      register: lookup_in_syslogrules  
+      when: (check_syslog_lookup.changed == false) and (syslog_rules.stat.exists)
+
+    - debug: var=lookup_in_syslogrules
+
+    #####################################
+    #  DpAutomate lookup file Section
+    #####################################       
     - name: Does lookup file exist
       stat:
         path: "{{rules_file_dpautolookup}}"
@@ -92,13 +131,17 @@
         insertafter: '.*\{"DummyHost1","1"\}'
         line: '        {"{{JShostname}}","1"},'
       when: check_hostname.changed == false 
-       
+
+    #####################################
+    #  Probe restart Section
+    #####################################              
     - name: Restart Mttrapd Probe
       # Will be skipped if check.changed is true
       shell: |
         {{omnibin}}/nco_pa_stop -process Mttrapd -password {{netcooluserpw}}
         sleep 1
         {{omnibin}}/nco_pa_start -process Mttrapd -password {{netcooluserpw}}
+
       when: (check_hostname.changed == false) and (snmp_rules.stat.exists)
       
     - name: "Hostname is already present"
