@@ -61,7 +61,7 @@
       with_items:
       - 'if (lookup(@Node, dpautomate.drop.lookup)) {'
       - '        discard}'
-      - '}'
+      - '}#'
       register: code_in_snmprules  
       when: (check_snmp_lookup.changed == false) and (snmp_rules.stat.exists)
 
