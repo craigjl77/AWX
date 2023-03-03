@@ -60,8 +60,8 @@
         insertafter: '.*dpautomate.drop.lookup.*'
         line: "{{ item }}"
       with_items:
-      - '$val = lookup(@Node, dpautomate_drop)'
       - 'if (regmatch($val,"1")) { discard }'
+      - '$val = lookup(@Node, dpautomate_drop)'
       - ' '
       register: code_in_snmprules  
       when: (check_snmp_lookup.changed == false) and (snmp_rules.stat.exists)
