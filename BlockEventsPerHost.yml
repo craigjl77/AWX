@@ -118,10 +118,10 @@
     - name: Create lookup file if not exists
       shell: |
         echo '## Table of hostnames where all events are dropped if set to 1' > {{ rules_file_dpautolookup }}
-        echo 'table dpautomate.drop = ' >> {{ rules_file_dpautolookup }}
+        echo 'table dpautomate_drop = ' >> {{ rules_file_dpautolookup }}
         echo '{' >> {{ rules_file_dpautolookup }}
-        echo '        {"DummyHost1","1"}' >> {{ rules_file_dpautolookup }}
-        echo '        {"DummyHost2","1",}' >> {{ rules_file_dpautolookup }}
+        echo '        {"DummyHost1","1"},' >> {{ rules_file_dpautolookup }}
+        echo '        {"DummyHost2","1"}' >> {{ rules_file_dpautolookup }}
         echo '}' >> {{ rules_file_dpautolookup }}
         echo 'default = {"Unknown"}' >> {{ rules_file_dpautolookup }}
       when:  not lookup_file.stat.exists
