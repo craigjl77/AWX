@@ -13,7 +13,7 @@
         path: "{{rules_file_eif}}"
       register: eif_rules
       
-    - debug: var=eif_rules 
+    #- debug: var=eif_rules 
 
     #####################################
     #  SNMP Section
@@ -23,7 +23,7 @@
         path: "{{rules_file_snmp}}"
       register: snmp_rules
       
-    - debug: var=snmp_rules  
+    #- debug: var=snmp_rules  
        
     - name: "Search for check_snmp_lookup"
       # check_snmp_lookup.changed will be true if dpautomate.drop.lookup exists
@@ -38,7 +38,7 @@
       register: check_snmp_lookup
       when: snmp_rules.stat.exists
       
-    - debug: var=check_snmp_lookup
+    #- debug: var=check_snmp_lookup
 
     - name: Add lookup to snmprules
       # Will be skipped if heck_snmp_lookup.changed is true 
@@ -50,7 +50,7 @@
       register: lookup_in_snmprules  
       when: (check_snmp_lookup.changed == false) and (snmp_rules.stat.exists)
       
-    - debug: var=lookup_in_snmprules
+    #- debug: var=lookup_in_snmprules
       
     - name: Add code to snmprules
       # Will be skipped if snmp_lookup.changed is true 
@@ -66,7 +66,7 @@
       register: code_in_snmprules  
       when: (check_snmp_lookup.changed == false) and (snmp_rules.stat.exists)
 
-    - debug: var=code_in_snmprules
+    #- debug: var=code_in_snmprules
 
     #####################################
     #  Syslog Section
@@ -76,7 +76,7 @@
         path: "{{rules_file_syslog}}"
       register: syslog_rules
       
-    - debug: var=syslog_rules
+    #- debug: var=syslog_rules
 
     - name: "Search for check_syslog_lookup"
       # check.changed will be true if dpautomate.drop.lookup exists
@@ -91,7 +91,7 @@
       register: check_syslog_lookup
       when: syslog_rules.stat.exists
       
-    - debug: var=check_syslog_lookup
+    #- debug: var=check_syslog_lookup
 
     - name: Add lookup to syslogrules
       # Will be skipped if check_syslog_lookup.changed is true 
@@ -103,7 +103,7 @@
       register: lookup_in_syslogrules  
       when: (check_syslog_lookup.changed == false) and (syslog_rules.stat.exists)
 
-    - debug: var=lookup_in_syslogrules
+    #- debug: var=lookup_in_syslogrules
 
     - name: Add code to syslogrules
       # Will be skipped if syslog_lookup.changed is true 
@@ -120,7 +120,7 @@
       register: code_in_syslogrules  
       when: (check_syslog_lookup.changed == false) and (syslog_rules.stat.exists)
 
-    - debug: var=code_in_syslogrules
+    #- debug: var=code_in_syslogrules
 
     #####################################
     #  DpAutomate lookup file Section
@@ -130,7 +130,7 @@
         path: "{{rules_file_dpautolookup}}"
       register: lookup_file
 
-    - debug: var=lookup_file  
+    #- debug: var=lookup_file  
        
     - name: Create lookup file if not exists
       shell: |
