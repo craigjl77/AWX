@@ -128,7 +128,7 @@
       
     - name: Change file ownership, group and permissions
       ansible.builtin.file:
-        path: /etc/foo.conf
+        path: "{{rules_file_dpautolookup}}"
         owner: netcool
         group: ncoadmin
         mode: '0644'
