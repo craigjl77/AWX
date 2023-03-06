@@ -91,6 +91,18 @@
       register: check_syslog_lookup
       when: syslog_rules.stat.exists
       
+    - debug: var=check_syslog_lookup
+
+    - name: Add lookup to syslogrules
+      # Will be skipped if check_syslog_lookup.changed is true 
+      lineinfile:
+        path: "{{rules_file_syslog}}"
+        backup: no
+        insertbefore: '.*Leaving... syslog.rules.*'
+        line: 'include "$NC_RULES_HOME/dpautomate.drop.lookup"'
+      register: lookup_in_syslogrules  
+      when: (check_syslog_lookup.changed == false) and (syslog_rules.stat.exists)
+
     - debug: var=lookup_in_syslogrules
 
     - name: Add code to syslogrules
@@ -130,7 +142,7 @@
         echo '}' >> {{ rules_file_dpautolookup }}
         echo 'default = {"Unknown"}' >> {{ rules_file_dpautolookup }}
       when:  not lookup_file.stat.exists
-      
+
     - name: Change file ownership, group and permissions
       ansible.builtin.file:
         path: "{{rules_file_dpautolookup}}"
@@ -165,7 +177,7 @@
     #  Probe restart Section
     #####################################              
     - name: Restart Mttrapd Probe
-      # Will be skipped if check.changed is true
+      # Will be skipped if check_hostname.changed is false
       shell: |
         {{omnibin}}/nco_pa_stop -process Mttrapd -password {{netcooluserpw}}
         sleep 1
