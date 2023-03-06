@@ -91,19 +91,24 @@
       register: check_syslog_lookup
       when: syslog_rules.stat.exists
       
-    - debug: var=check_snmp_lookup
+    - debug: var=lookup_in_syslogrules
 
-    - name: Add lookup to syslogrules
-      # Will be skipped if check_syslog_lookup.changed is true 
+    - name: Add code to syslogrules
+      # Will be skipped if syslog_lookup.changed is true 
       lineinfile:
         path: "{{rules_file_syslog}}"
         backup: no
-        insertbefore: '.*Leaving... syslog.rules.*'
-        line: 'include "$NC_RULES_HOME/dpautomate.drop.lookup"'
-      register: lookup_in_syslogrules  
+        insertafter: '.*dpautomate.drop.lookup.*'
+        #Note items added need to be in the reverse order to what you need them in the file
+        line: "{{ item }}"
+      with_items:
+      - ' '
+      - 'if (regmatch($val,"1")) { discard }'
+      - '$val = lookup(@Node, dpautomate_drop)'
+      register: code_in_syslogrules  
       when: (check_syslog_lookup.changed == false) and (syslog_rules.stat.exists)
 
-    - debug: var=lookup_in_syslogrules
+    - debug: var=code_in_syslogrules
 
     #####################################
     #  DpAutomate lookup file Section
