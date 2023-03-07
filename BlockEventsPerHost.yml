@@ -140,7 +140,7 @@
         echo '        {"DummyHost1","1"},' >> {{ rules_file_dpautolookup }}
         echo '        {"DummyHost2","1"}' >> {{ rules_file_dpautolookup }}
         echo '}' >> {{ rules_file_dpautolookup }}
-        echo 'default = {"Unknown"}' >> {{ rules_file_dpautolookup }}
+        echo 'default = {"0"}' >> {{ rules_file_dpautolookup }}
       when:  not lookup_file.stat.exists
 
     - name: Change file ownership, group and permissions
