@@ -148,7 +148,7 @@
         path: "{{rules_file_dpautolookup}}"
         owner: netcool
         group: ncoadmin
-        mode: '0644'
+        mode: '0744'
 
     - name: "Search for hostname"
       # check.changed will be true if hostname exists
