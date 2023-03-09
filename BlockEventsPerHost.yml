@@ -156,7 +156,7 @@
       set_fact:
         hosts_to_add_list: "{{ JShostname.split(',') }}"
 
-    - debug: var=my_list 
+    - debug: var=hosts_to_add_list 
     
     - name: Check if each item in the list exists in the file
       replace:
@@ -179,7 +179,7 @@
       register: add_lines
       with_items: "{{ hosts_to_add_list }}"
       # only run this task when the list is not empty
-      when: hosts_to_add_list and not check_hostname.results | map(attribute='changed') | list
+      when: hosts_to_add_list and check_hostname.results | map(attribute='changed') | list
       
 
     - debug: var=add_lines
@@ -194,7 +194,7 @@
         sleep 1
         {{omnibin}}/nco_pa_start -process Mttrapd -password {{netcooluserpw}}
 
-      when: (my_list) and (snmp_rules.stat.exists)
+      when: (hosts_to_add_list) and (snmp_rules.stat.exists)
       
     - name: "Hostname is already present"
       # Will run if check.changed is true
