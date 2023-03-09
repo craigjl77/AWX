@@ -189,18 +189,10 @@
     #  Probe restart Section
     #####################################              
     - name: Restart Mttrapd Probe
-      # Will be skipped if check_hostname.changed is false
+      # Will be skipped if check_hostname.changed is true ie a Line was added to to the lookup file
       shell: |
-        {{omnibin}}/nco_pa_stop -process Mttrapd -password {{netcooluserpw}}
+        {{omnibin}}/nco_pa_stop -process {{nco_pa_mttrapd_process_name}} -password {{netcooluserpw}}
         sleep 1
-        {{omnibin}}/nco_pa_start -process Mttrapd -password {{netcooluserpw}}
+        {{omnibin}}/nco_pa_start -process {{nco_pa_mttrapd_process_name}} -password {{netcooluserpw}}
 
-      when: (hosts_to_add_list) and (snmp_rules.stat.exists)
-      
-    - name: "Hostname is already present"
-      # Will run if check.changed is true
-      debug: msg="Hostname {{JShostname}} is alredy present"
-      when: check_hostname.changed == true
-      
-    # The Output of the above task will be displayed on the Screen
-    #- debug: var=output.stdout_lines
+      when: (add_lines.changed == true) and (snmp_rules.stat.exists)
