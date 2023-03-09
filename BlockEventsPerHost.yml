@@ -152,12 +152,14 @@
       when:  not lookup_file.stat.exists
 
     - name Split incoming hostnames
+      vars:
+        foo: "{{JShostname}}"
       replace:
         path: "{{rules_file_dpautolookup}}"
         regexp: ".*{{item}}.*"
         replace: "TestReplace"
         check_mode: yes
-      with_items: "{{ {{JShostname}}.split(',') }}"
+      with_items: "{{ foo.split(',') }}"
       register: multi_host_check
 
     - debug: var=multi_host_check 
