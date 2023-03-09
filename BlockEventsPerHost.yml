@@ -153,12 +153,10 @@
 
     - name Split incoming hostnames
       
-      debug: var="{{ item }}"
-      with_items: 
-      - "{{ {{JShostname}} | split(',') | last }}"
-      register: multi_host_check
-
-    - debug: var=multi_host_check 
+      debug: 
+         msg: "{{ {{JShostname}} | split(',') | last}}"
+ 
+    #- debug: var=multi_host_check 
 
     - name: "Search for hostname"
       # check.changed will be true if hostname exists
