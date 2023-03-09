@@ -136,6 +136,7 @@
     - name: Create lookup file if not exists
       shell: |
         echo '## Table of hostnames where all events are dropped if set to 1' > {{ rules_file_dpautolookup }}
+        echo '## DO NOT ever remove the DummyHost enties as you WILL break Ansible Automation' > {{ rules_file_dpautolookup }}
         echo 'table dpautomate_drop = ' >> {{ rules_file_dpautolookup }}
         echo '{' >> {{ rules_file_dpautolookup }}
         echo '        {"DummyHost1","1"},' >> {{ rules_file_dpautolookup }}
