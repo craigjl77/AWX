@@ -3,9 +3,7 @@
     # Ansible Playbook will run on all hosts
     hosts: all
     gather_facts: no
-    vars:
-       hostlist:
-          - "{{ {{JShostname}} | split(',') | last}}"
+
     tasks:
 
     #####################################
@@ -153,8 +151,12 @@
         group: ncoadmin
         mode: '0644'
       when:  not lookup_file.stat.exists
+      
+    - name: Split comma-separated fact into a list
+      set_fact:
+        my_list: "{{ JShostname.split(',') }}"
 
-    #- debug: var=multi_host_check 
+    - debug: var=my_list 
 
     - name: "Search for hostname"
       # check.changed will be true if hostname exists
@@ -168,7 +170,7 @@
       check_mode: yes
       register: check_hostname
       
-    - debug: var=hostlist
+    #- debug: var=hostlist
     
     - name: Add new host to dpautomate.drop.lookup
       # Will be skipped if check.changed is true 
