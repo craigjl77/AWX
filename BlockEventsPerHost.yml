@@ -153,11 +153,7 @@
 
     - name Split incoming hostnames
       #set_fact: foo="{{JShostname}}"
-      replace:
-        path: "{{rules_file_dpautolookup}}"
-        regexp: ".*{{item}}.*"
-        replace: "TestReplace"
-        check_mode: yes
+      debug: var="{{ item }}"
       with_items: 
       - "{{ {{JShostname}} | split(',') | last }}"
       register: multi_host_check
