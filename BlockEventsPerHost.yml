@@ -173,7 +173,7 @@
     - name: Add items to the file if they don't exist
       lineinfile:
         insertafter: '.*\{"DummyHost1","1"\}'
-        line: "{{ item }}"
+        line: "        {{ item }},"
         dest: "{{ rules_file_dpautolookup }}"
         state: present
       register: add_lines
