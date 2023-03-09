@@ -152,7 +152,7 @@
       when:  not lookup_file.stat.exists
 
     - name Split incoming hostnames
-      #set_fact: foo="{{JShostname}}"
+      
       debug: var="{{ item }}"
       with_items: 
       - "{{ {{JShostname}} | split(',') | last }}"
