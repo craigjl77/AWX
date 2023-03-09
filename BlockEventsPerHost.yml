@@ -159,14 +159,16 @@
     - debug: var=my_list 
     
     - name: Check if each item in the list exists in the file
-      shell: grep -q "{{ item }}" {{ rules_file_dpautolookup }}
-      register: grep_result
-      failed_when: false
+      replace:
+        path: "{{rules_file_dpautolookup}}"
+        regexp: ".*{{ item }}.*"
+        replace: "TestReplace"
+      check_mode: yes
+      register: check_hostname
       with_items: "{{ my_list }}"
-      # only run this task when the list is not empty
       when: my_list
 
-    - debug: var=grep_result
+    - debug: var=check_hostname
 
     - name: Add items to the file if they don't exist
       lineinfile:
@@ -174,10 +176,11 @@
         line: "{{ item }}"
         dest: "{{ rules_file_dpautolookup }}"
         state: present
-        register: add_lines
+      register: add_lines
       with_items: "{{ my_list }}"
       # only run this task when the list is not empty
-      when: my_list and not grep_result.results | map(attribute='rc') | list
+      when: my_list
+      
 
     - debug: var=add_lines
 
