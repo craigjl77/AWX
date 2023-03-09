@@ -154,7 +154,7 @@
       
     - name: Split comma-separated fact into a list
       set_fact:
-        my_list: "{{ JShostname.split(',') }}"
+        hosts_to_add_list: "{{ JShostname.split(',') }}"
 
     - debug: var=my_list 
     
@@ -165,8 +165,8 @@
         replace: "TestReplace"
       check_mode: yes
       register: check_hostname
-      with_items: "{{ my_list }}"
-      when: my_list
+      with_items: "{{ hosts_to_add_list }}"
+      when: hosts_to_add_list
 
     - debug: var=check_hostname
 
@@ -177,9 +177,9 @@
         dest: "{{ rules_file_dpautolookup }}"
         state: present
       register: add_lines
-      with_items: "{{ my_list }}"
+      with_items: "{{ hosts_to_add_list }}"
       # only run this task when the list is not empty
-      when: my_list
+      when: hosts_to_add_list and not check_hostname.results | map(attribute='changed') | list
       
 
     - debug: var=add_lines
