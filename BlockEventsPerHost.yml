@@ -157,7 +157,7 @@
         regexp: ".*{{item}}.*"
         replace: "TestReplace"
         check_mode: yes
-      with_items: "{{{{JShostname}} | split(',') | last}}"
+      with_items: "{{ {{JShostname}}.split(',') }}"
       register: multi_host_check
 
     - debug: var=multi_host_check 
