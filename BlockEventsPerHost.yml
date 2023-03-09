@@ -168,7 +168,7 @@
       check_mode: yes
       register: check_hostname
       
-    #- debug: var=check_hostname
+    - debug: var=hostlist
     
     - name: Add new host to dpautomate.drop.lookup
       # Will be skipped if check.changed is true 
