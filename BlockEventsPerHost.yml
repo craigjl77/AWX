@@ -149,6 +149,21 @@
         owner: netcool
         group: ncoadmin
         mode: '0644'
+      when:  not lookup_file.stat.exists
+
+    - name Split incoming hostnames
+      vars:
+         hosts_split: "{{{{JShostname}} | split(',') | last}}"
+         debug: var=hosts_split
+      replace:
+        path: "{{rules_file_dpautolookup}}"
+        regexp: ".*{{item}}.*"
+        replace: "TestReplace"
+        check_mode: yes
+      with_items: {{hosts_split}}
+      register: multi_host_check
+
+    - debug: var=multi_host_check 
 
     - name: "Search for hostname"
       # check.changed will be true if hostname exists
