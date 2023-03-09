@@ -3,6 +3,9 @@
     # Ansible Playbook will run on all hosts
     hosts: all
     gather_facts: no
+    vars:
+       hostlist:
+          - "{{ {{JShostname}} | split(',') | last}}"
     tasks:
 
     #####################################
@@ -151,11 +154,6 @@
         mode: '0644'
       when:  not lookup_file.stat.exists
 
-    - name Split incoming hostnames
-      
-      debug: 
-         msg: "{{ {{JShostname}} | split(',') | last}}"
- 
     #- debug: var=multi_host_check 
 
     - name: "Search for hostname"
