@@ -152,6 +152,7 @@
       when:  not lookup_file.stat.exists
 
     - name Split incoming hostnames
+      set_fact: foo="{{JShostname}}"
       replace:
         path: "{{rules_file_dpautolookup}}"
         regexp: ".*{{item}}.*"
