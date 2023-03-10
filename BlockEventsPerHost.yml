@@ -23,7 +23,7 @@
       stat:
         path: "{{rules_file_snmp}}"
       register: snmp_rules
-    bla  
+     
     #- debug: var=snmp_rules  
        
     - name: "Search for check_snmp_lookup"
