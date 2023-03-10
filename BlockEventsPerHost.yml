@@ -132,7 +132,7 @@
       register: lookup_file
 
     #- debug: var=lookup_file  
-    blah   
+      
     - name: Create lookup file if not exists
       shell: |
         echo '## Table of hostnames where all events are dropped if set to 1' > {{ rules_file_dpautolookup }}
